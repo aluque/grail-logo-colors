@@ -238,6 +238,36 @@
       pointer-events: none;
     }
 
+    /* ── slider rows ── */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 10px 8px 10px;
+      margin: -4px 0 4px 0;
+    }
+    .slider-label {
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      min-width: 0;
+      max-width: 120px;
+      accent-color: #3b6bef;
+      height: 4px;
+      cursor: pointer;
+    }
+    .slider-value {
+      font-size: 11px;
+      color: rgba(255,255,255,0.6);
+      width: 48px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
     /* ── EU logo toggle ── */
     .toggle-row {
       display: flex;
@@ -534,6 +564,20 @@
         <input type="color" list="color-presets" class="hidden-picker" id="picker-letters" value="#ffffff" />
       </div>
 
+      <!-- Photon -->
+      <div class="color-row" id="row-photon">
+        <div class="color-swatch" id="swatch-photon"></div>
+        <div class="color-meta">
+          <div class="color-label">Photon</div>
+          <div class="color-hex" id="hex-photon">#EC8AFF</div>
+        </div>
+        <svg class="color-edit-icon" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M9.5 2.5l2 2-6 6H3.5v-2l6-6z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+        </svg>
+        <div class="default-dot" id="default-photon"></div>
+        <input type="color" list="color-presets" class="hidden-picker" id="picker-photon" value="#ec8aff" />
+      </div>
+
       <!-- Cloud -->
       <div class="color-row" id="row-cloud">
         <div class="color-swatch" id="swatch-cloud"></div>
@@ -561,19 +605,11 @@
         <div class="default-dot" id="default-cloudBorder"></div>
         <input type="color" list="color-presets" class="hidden-picker" id="picker-cloudBorder" value="#ffffff" />
       </div>
-
-      <!-- Photon -->
-      <div class="color-row" id="row-photon">
-        <div class="color-swatch" id="swatch-photon"></div>
-        <div class="color-meta">
-          <div class="color-label">Photon</div>
-          <div class="color-hex" id="hex-photon">#EC8AFF</div>
-        </div>
-        <svg class="color-edit-icon" width="14" height="14" viewBox="0 0 14 14" fill="none">
-          <path d="M9.5 2.5l2 2-6 6H3.5v-2l6-6z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
-        </svg>
-        <div class="default-dot" id="default-photon"></div>
-        <input type="color" list="color-presets" class="hidden-picker" id="picker-photon" value="#ec8aff" />
+      <!-- Cloud boundary thickness -->
+      <div class="slider-row">
+        <label class="slider-label" for="slider-cloudStroke">Boundary thickness</label>
+        <input type="range" id="slider-cloudStroke" min="0" max="60" step="0.5" value="19.12" />
+        <span class="slider-value" id="val-cloudStroke">19.12</span>
       </div>
     </div>
 

@@ -14,6 +14,9 @@
 
   var colors = Object.assign({}, defaultColors);
 
+  var DEFAULT_CLOUD_STROKE = 19.12;
+  var cloudStrokeWidth = DEFAULT_CLOUD_STROKE;
+
   var showEuLogo = true;
 
   // ── helpers ─────────────────────────────────────────────────────────────────
@@ -63,6 +66,7 @@
     if (cloud) {
       cloud.style.fill = colors.cloud;
       cloud.style.stroke = colors.cloudBorder;
+      cloud.style.strokeWidth = cloudStrokeWidth + 'px';
     }
 
     // Photon fill
@@ -280,7 +284,7 @@
   // ── download colors JSON ─────────────────────────────────────────────────────
 
   function downloadColorsJSON() {
-    var payload = Object.assign({}, colors, { showEuLogo: showEuLogo });
+    var payload = Object.assign({}, colors, { showEuLogo: showEuLogo, cloudStrokeWidth: cloudStrokeWidth });
     var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
@@ -305,6 +309,13 @@
             setSwatchColor(k, loaded[k]);
           }
         });
+        if (typeof loaded.cloudStrokeWidth === 'number') {
+          cloudStrokeWidth = loaded.cloudStrokeWidth;
+          var slider = document.getElementById('slider-cloudStroke');
+          var valLabel = document.getElementById('val-cloudStroke');
+          if (slider) slider.value = cloudStrokeWidth;
+          if (valLabel) valLabel.textContent = cloudStrokeWidth.toFixed(2);
+        }
         if (typeof loaded.showEuLogo === 'boolean') {
           showEuLogo = loaded.showEuLogo;
           var toggle = document.getElementById('eu-toggle');
@@ -344,12 +355,27 @@
     }
   }
 
+  // ── cloud stroke slider ──────────────────────────────────────────────────────
+
+  function initCloudStrokeSlider() {
+    var slider = document.getElementById('slider-cloudStroke');
+    var valLabel = document.getElementById('val-cloudStroke');
+    if (!slider) return;
+    slider.addEventListener('input', function () {
+      cloudStrokeWidth = parseFloat(slider.value);
+      if (valLabel) valLabel.textContent = cloudStrokeWidth.toFixed(2);
+      var cloud = document.querySelector('#grail-logo-svg #grail-cloud');
+      if (cloud) cloud.style.strokeWidth = cloudStrokeWidth + 'px';
+    });
+  }
+
   // ── init ─────────────────────────────────────────────────────────────────────
 
   document.addEventListener('DOMContentLoaded', function () {
     initPickers();
     initEuToggle();
     initToolbar();
+    initCloudStrokeSlider();
     applyColors();
   });
 
