@@ -17,6 +17,17 @@
   var DEFAULT_CLOUD_STROKE = 19.12;
   var cloudStrokeWidth = DEFAULT_CLOUD_STROKE;
 
+  // Lower decorative bar geometry (Artboard1 coordinate space)
+  // transform: matrix(sx,0,0,sy,tx,ty) applied to rect with local_top=1228.346, local_height=283.465
+  // To shift only the bottom by delta (keeping top fixed):
+  //   new_sy = DEFAULT_LOWER_SY + delta / LOCAL_HEIGHT
+  //   new_ty = LOCAL_TOP * (1 - new_sy)
+  var LOWER_BAR_SX          = 0.759324;
+  var LOWER_BAR_TX          = -627.301904;
+  var LOWER_BAR_LOCAL_TOP   = 1228.346;
+  var LOWER_BAR_LOCAL_HEIGHT = 283.465;
+  var LOWER_BAR_DEFAULT_SY  = 1.416667;
+
   var showEuLogo = true;
 
   // ── helpers ─────────────────────────────────────────────────────────────────
@@ -315,6 +326,7 @@
           var valLabel = document.getElementById('val-cloudStroke');
           if (slider) slider.value = cloudStrokeWidth;
           if (valLabel) valLabel.textContent = cloudStrokeWidth.toFixed(2);
+          adjustLowerBar(cloudStrokeWidth);
         }
         if (typeof loaded.showEuLogo === 'boolean') {
           showEuLogo = loaded.showEuLogo;
@@ -355,6 +367,23 @@
     }
   }
 
+  // ── lower bar alignment ──────────────────────────────────────────────────────
+
+  function adjustLowerBar(strokeWidth) {
+    var svg = document.getElementById('grail-logo-svg');
+    if (!svg) return;
+    var blocks = svg.querySelector('#grail-blocks');
+    if (!blocks) return;
+    var lowerGroup = blocks.querySelector('g');  // first child <g> is the lower bar
+    if (!lowerGroup) return;
+    // Stroke edge moves by delta/2 when stroke changes by delta; shift block bottom by same amount.
+    var delta = (strokeWidth - DEFAULT_CLOUD_STROKE) / 2;
+    var newSy = LOWER_BAR_DEFAULT_SY + delta / LOWER_BAR_LOCAL_HEIGHT;
+    var newTy = LOWER_BAR_LOCAL_TOP * (1 - newSy);
+    lowerGroup.setAttribute('transform',
+      'matrix(' + LOWER_BAR_SX + ',0,0,' + newSy.toFixed(6) + ',' + LOWER_BAR_TX + ',' + newTy.toFixed(6) + ')');
+  }
+
   // ── cloud stroke slider ──────────────────────────────────────────────────────
 
   function initCloudStrokeSlider() {
@@ -366,6 +395,7 @@
       if (valLabel) valLabel.textContent = cloudStrokeWidth.toFixed(2);
       var cloud = document.querySelector('#grail-logo-svg #grail-cloud');
       if (cloud) cloud.style.strokeWidth = cloudStrokeWidth + 'px';
+      adjustLowerBar(cloudStrokeWidth);
     });
   }
 
